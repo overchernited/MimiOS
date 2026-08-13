@@ -35,12 +35,15 @@ export const auth = {
   async signUp(email: string, password: string, username: string) {
     const emailRedirectTo =
       typeof window !== 'undefined' ? window.location.origin : undefined;
-    const { error } = await supabase().auth.signUp({
+    const { data, error } = await supabase().auth.signUp({
       email,
       password,
       options: { data: { username }, emailRedirectTo }
     });
     if (error) throw error;
+    if (!data.user) {
+      throw new Error('email already registered');
+    }
   },
 
   async signIn(email: string, password: string) {
