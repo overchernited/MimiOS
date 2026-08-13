@@ -5,6 +5,8 @@ node_modules/
 dist/
 build/
 .pio/
+.svelte-kit/
+.vercel/
 
 # Environment / secrets (never commit real values)
 .env

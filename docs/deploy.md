@@ -1,6 +1,28 @@
-# Deploy to Supabase Cloud
+# Deploy
 
-Publishing the schema and wiring the CI to a cloud Supabase project must run from a network that can reach `api.supabase.co`, `cli.supabase.com` and `platform.supabase.com`. These domains are blocked from the primary dev machine (see AGENTS.md).
+Publishing the schema and wiring the CI to a cloud Supabase project must run from a network that can reach `api.supabase.co`, `cli.supabase.com` and `platform.supabase.com`. These domains are blocked from the primary dev machine (see AGENTS.md). Vercel, by contrast, is reachable from the dev machine.
+
+## Deploy the hub to Vercel
+
+The hub (`hub/`) uses `@sveltejs/adapter-vercel`; `vite build` emits the `.vercel/output` bundle the CLI uploads.
+
+```bash
+# from hub/
+vercel login                    # interactive — one time
+vercel link                     # link to a Vercel project (or create one)
+pnpm run deploy                 # vercel --prod
+```
+
+Environment variables must exist in the Vercel project (*Settings → Environment Variables*), at least for Production:
+
+| Name | Value |
+|---|---|
+| `VITE_SUPABASE_URL` | `https://<ref>.supabase.co` (same as the GitHub secret) |
+| `VITE_SUPABASE_ANON_KEY` | the project's public `anon` key |
+
+They are read at build time (`import.meta.env`), so set them before the deploy runs. Until the cloud Supabase project exists, point them at the local stack (`http://127.0.0.1:54321` + the local anon key) for a preview deploy, then switch to the cloud values.
+
+## Deploy to Supabase Cloud
 
 ## 1. Authenticate the CLI
 
