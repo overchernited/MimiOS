@@ -1,13 +1,9 @@
--- MimicroOS marketplace: apps, widgets, cartridges and firmware.
+-- MimiOS marketplace: apps, widgets, and cartridges.
 -- Applied identically locally (supabase start) and in the cloud (supabase db push).
 
 -- =============================================================
 -- Tables
 -- =============================================================
-
--- apps and widgets store their specific config (tag, source_url,
--- grid, size...) in `manifest` as JSON, with no fixed columns.
--- user_id = row owner (assigned by a trigger on insert).
 
 create table if not exists apps (
   id          text primary key,
@@ -54,25 +50,6 @@ create table if not exists cartridges (
   updated_at  timestamptz not null default now()
 );
 
--- firmware: dedicated table for the base firmware. The hub loads it from
--- here (special `firmware/` folder in storage), separate from the catalog.
--- No user_id/file_path: the firmware is uploaded to the database manually.
-
-create table if not exists firmware (
-  id          text primary key,
-  title       text not null,
-  description text not null default '',
-  author      text not null default 'MimiOS',
-  version     text not null default '1.0.0',
-  chip        text not null default 'auto',
-  file_size   integer not null default 0,
-  created_at  timestamptz not null default now(),
-  updated_at  timestamptz not null default now()
-);
-
--- profiles: public handle for each auth user. Created automatically on
--- signup (username from user metadata or email prefix, de-duplicated).
-
 create table if not exists profiles (
   id         uuid primary key references auth.users(id) on delete cascade,
   username   text not null unique,
@@ -80,33 +57,44 @@ create table if not exists profiles (
 );
 
 -- =============================================================
--- RLS: the hub only reads. Insert requires an authenticated session
--- (developers). Delete: each dev can delete ONLY what they uploaded
--- (user_id = auth.uid()). Update: nobody. The download counter
--- goes through the increment_downloads RPC.
+-- RLS Setup
 -- =============================================================
 
 alter table apps enable row level security;
 alter table widgets enable row level security;
 alter table cartridges enable row level security;
-alter table firmware enable row level security;
 alter table profiles enable row level security;
 
-grant select on apps, widgets, cartridges, firmware to anon;
+grant select on apps, widgets, cartridges to anon;
 grant select, insert, delete on apps, widgets, cartridges to authenticated;
-grant select on firmware to authenticated;
 
 grant select on profiles to anon, authenticated;
 grant insert, update on profiles to authenticated;
 
--- CI pipeline (build-firmware.yml) publishes the base firmware with the
--- service role: it upserts the row after uploading the .bin to storage.
-grant select, insert, update on firmware to service_role;
+-- CI pipeline publishes firmware with the service role
+grant select, insert, update on cartridges to service_role;
 
+-- Limpieza preventiva de políticas para evitar errores de duplicidad
+drop policy if exists "apps public read" on apps;
+drop policy if exists "widgets public read" on widgets;
+drop policy if exists "cartridges public read" on cartridges;
+drop policy if exists "profiles public read" on profiles;
+
+drop policy if exists "apps auth insert" on apps;
+drop policy if exists "widgets auth insert" on widgets;
+drop policy if exists "cartridges auth insert" on cartridges;
+
+drop policy if exists "profiles own insert" on profiles;
+drop policy if exists "profiles own update" on profiles;
+
+drop policy if exists "apps auth delete own" on apps;
+drop policy if exists "widgets auth delete own" on widgets;
+drop policy if exists "cartridges auth delete own" on cartridges;
+
+-- Creación de políticas
 create policy "apps public read" on apps for select using (true);
 create policy "widgets public read" on widgets for select using (true);
 create policy "cartridges public read" on cartridges for select using (true);
-create policy "firmware public read" on firmware for select using (true);
 create policy "profiles public read" on profiles for select using (true);
 
 create policy "apps auth insert" on apps for insert with check (auth.role() = 'authenticated');
@@ -120,8 +108,9 @@ create policy "apps auth delete own" on apps for delete using (auth.uid() = user
 create policy "widgets auth delete own" on widgets for delete using (auth.uid() = user_id);
 create policy "cartridges auth delete own" on cartridges for delete using (auth.uid() = user_id);
 
--- Assigns the owner (auth.uid()) on every insert, ignoring whatever
--- the client sends, so nobody can impersonate another user.
+-- =============================================================
+-- Triggers and Functions
+-- =============================================================
 
 create or replace function public.set_user_id() returns trigger
 language plpgsql
@@ -134,12 +123,13 @@ begin
 end;
 $$;
 
+drop trigger if exists apps_user_id on apps;
+drop trigger if exists widgets_user_id on widgets;
+drop trigger if exists cartridges_user_id on cartridges;
+
 create trigger apps_user_id before insert on apps for each row execute function public.set_user_id();
 create trigger widgets_user_id before insert on widgets for each row execute function public.set_user_id();
 create trigger cartridges_user_id before insert on cartridges for each row execute function public.set_user_id();
-
--- Creates a public profile right after signup. Username comes from user
--- metadata, falling back to the email prefix; conflicts get a numeric suffix.
 
 create or replace function public.handle_new_user() returns trigger
 language plpgsql
@@ -163,11 +153,9 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
-
--- Download counter: the only allowed UPDATE, via a security definer RPC
--- (avoids granting write access to the tables).
 
 create or replace function public.increment_downloads(target_kind text, target_id text)
 returns void
@@ -189,14 +177,17 @@ revoke all on function public.increment_downloads(text, text) from public;
 grant execute on function public.increment_downloads(text, text) to anon, authenticated;
 
 -- =============================================================
--- Storage: public bucket for the .bin files. The hub downloads
--- without auth; the dev (authenticated) uploads/deletes cartridges
--- from their tooling. The base firmware is uploaded manually.
+-- Storage: public bucket for the .bin files
 -- =============================================================
 
 insert into storage.buckets (id, name, public)
 values ('cartridges', 'cartridges', true)
 on conflict (id) do nothing;
+
+drop policy if exists "cartridges public read" on storage.objects;
+drop policy if exists "cartridges auth upload" on storage.objects;
+drop policy if exists "cartridges auth update" on storage.objects;
+drop policy if exists "cartridges auth delete" on storage.objects;
 
 create policy "cartridges public read" on storage.objects for select using (bucket_id = 'cartridges');
 create policy "cartridges auth upload" on storage.objects for insert with check (bucket_id = 'cartridges' and auth.role() = 'authenticated');
@@ -227,11 +218,4 @@ insert into widgets (id, title, description, author, version, manifest, download
    '{"tag_name":"devices-widget","source_url":"/src/widgets/devices/devices.svelte","col":11,"row":2,"span_col":6,"span_row":2}'::jsonb, 6),
   ('taskbar', 'Taskbar', 'Barra de tareas y lanzador', 'MimiOS', '1.0.0',
    '{"tag_name":"taskbar-widget","source_url":"/src/widgets/taskbar/taskbar.svelte","col":6,"row":7,"span_col":6,"span_row":1}'::jsonb, 4)
-on conflict (id) do nothing;
-
-insert into firmware (id, title, description, author, version, chip, file_size) values
-  ('mimios-base-esp32',  'MimiOS Base ESP32',  'Firmware base para ESP32 clasico',     'MimiOS', '1.0.0', 'esp32',  0),
-  ('mimios-base-esp32s3','MimiOS Base ESP32-S3','Firmware base para ESP32-S3',          'MimiOS', '1.0.0', 'esp32s3',0),
-  ('mimios-base-esp32c3','MimiOS Base ESP32-C3','Firmware base para ESP32-C3',          'MimiOS', '1.0.0', 'esp32c3',0),
-  ('mimios-base-esp32s2','MimiOS Base ESP32-S2','Firmware base para ESP32-S2',          'MimiOS', '1.0.0', 'esp32s2',0)
 on conflict (id) do nothing;
