@@ -22,7 +22,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !binPath || !chip || !version
   process.exit(1);
 }
 
-const id = `mimios-base-${chip}-${version}`;
+const id = `mimios-base-${chip}-${version}-${type}`;
 const bucket = 'cartridges';
 
 async function uploadFile(path, storagePath) {
