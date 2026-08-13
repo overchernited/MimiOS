@@ -24,10 +24,6 @@ jobs:
             platform: win
             command: dist:win
             artifact: cortex-windows
-          - os: macos-latest
-            platform: mac
-            command: dist:mac
-            artifact: cortex-macos
     steps:
       - name: Checkout
         uses: actions/checkout@v4
