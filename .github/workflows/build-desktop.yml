@@ -47,22 +47,22 @@ jobs:
         working-directory: cortex
         run: pnpm install --frozen-lockfile
 
-      # 1. Compila los instaladores de forma normal (Sin intentar subirlos desde aquí)
       - name: Build Application
         working-directory: cortex
-        run: pnpm run ${{ matrix.command }} -- --publish never
+        run: pnpm run ${{ matrix.command }} -- --publish never -c.publish=null
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      # 2. Esta acción agarra los archivos generados y los sube directo a un Draft Release
       - name: Create Draft and Upload Binaries
         uses: ncipollo/release-action@v1
         with:
           tag: "cortex-v${{ inputs.version || github.ref_name }}"
           name: "MimiOS Cortex v${{ inputs.version || github.ref_name }}"
           draft: true
-          allowUpdates: true # Permite que Windows y Linux suban archivos al mismo borrador
+          allowUpdates: true
           artifacts: "cortex/dist-electron/*.exe,cortex/dist-electron/*.deb,cortex/dist-electron/*.AppImage"
           token: ${{ secrets.GITHUB_TOKEN }}
