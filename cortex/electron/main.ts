@@ -22,11 +22,11 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 1280,
     height: 800,
-    minWidth: 960,
-    minHeight: 600,
     show: false,
-    maximizable: true,
+    maximizable: false, // Deshabilita el botón de maximizar/restaurar nativo
     minimizable: false,
+    resizable: false,    // Bloquea el redimensionamiento manual por completo
+    fullscreenable: false,
     title: 'MimiOS Cortex',
     backgroundColor: '#0a0a0f',
     autoHideMenuBar: true,
@@ -37,10 +37,17 @@ async function createWindow() {
     },
   });
 
+  // Usamos el modo Kiosk o maximizado forzado por pantalla
   win.maximize();
-  win.on('minimize', (e) => e.preventDefault());
-  win.once('ready-to-show', () => win?.show());
-  win.on('page-title-updated', (e) => e.preventDefault());
+
+  win.once('ready-to-show', () => {
+    win?.show();
+  });
+
+  win.on('page-title-updated', (e: Electron.Event) => {
+    e.preventDefault();
+  });
+
   win.on('closed', () => {
     win = null;
   });
