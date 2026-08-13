@@ -24,6 +24,9 @@ async function createWindow() {
     height: 800,
     minWidth: 960,
     minHeight: 600,
+    show: false,
+    maximizable: true,
+    minimizable: false,
     title: 'MimiOS Cortex',
     backgroundColor: '#0a0a0f',
     autoHideMenuBar: true,
@@ -34,6 +37,9 @@ async function createWindow() {
     },
   });
 
+  win.maximize();
+  win.on('minimize', (e) => e.preventDefault());
+  win.once('ready-to-show', () => win?.show());
   win.on('page-title-updated', (e) => e.preventDefault());
   win.on('closed', () => {
     win = null;
