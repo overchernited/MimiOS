@@ -45,6 +45,19 @@ jobs:
         run: pio run -e ${{ matrix.env }} -t buildfs
         working-directory: firmware
 
+      - name: Merge Firmware Components
+        run: |
+          pip install esptool
+          
+          python -m esptool --chip ${{ matrix.chip }} merge_bin \
+            -o .pio/build/${{ matrix.env }}/firmware-factory.bin \
+            --flash_mode dio \
+            --flash_size 4MB \
+            0x0000 .pio/build/${{ matrix.env }}/bootloader.bin \
+            0x8000 .pio/build/${{ matrix.env }}/partitions.bin \
+            0x10000 .pio/build/${{ matrix.env }}/firmware.bin
+        working-directory: firmware
+
       - name: Resolve version
         id: version
         run: |
@@ -60,7 +73,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           node tools/upload-firmware/index.js \
-            ".pio/build/${{ matrix.env }}/mimios-base-${{ matrix.chip }}.bin" \
+            ".pio/build/${{ matrix.env }}/firmware-factory.bin" \
             "${{ matrix.chip }}" \
             "${{ steps.version.outputs.value }}"
         working-directory: firmware
