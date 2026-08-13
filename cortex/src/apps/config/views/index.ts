@@ -6,7 +6,7 @@ import SystemView from './system.svelte';
 export interface ConfigView {
   label: string;
   icon?: Component;
-  component: Component;
+  component: Component<Record<string, unknown>, any, any>;
 }
 
 export const configViews: Record<string, ConfigView> = {

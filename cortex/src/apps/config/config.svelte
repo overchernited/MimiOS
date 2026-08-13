@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { configViews } from './views';
+  import { OS } from '@/lib/services';
 
   let tab = $state(Object.keys(configViews)[0]);
   const active = $derived(configViews[tab]);
@@ -27,7 +28,7 @@
   {#if active}
     {@const View = active.component}
     <div class="flex min-h-0 flex-1 flex-col">
-      <View />
+      <View services={OS} />
     </div>
   {/if}
 </section>

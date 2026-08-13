@@ -54,7 +54,20 @@ function connect() {
         LogStore.add({ id: crypto.randomUUID(), message: msg.message, timestamp: Date.now() });
         break;
       case 'preferences':
-        StorageStore.load(msg.config, msg.cartridge ?? '', msg.cartridge_version ?? '', msg.model ?? '');
+        StorageStore.load({
+          ...msg.config,
+          os: msg.os,
+          cartridge: msg.cartridge,
+          cartridge_version: msg.cartridge_version,
+          model: msg.model,
+          cores: msg.cores,
+          cpu_freq: msg.cpu_freq,
+          revision: msg.revision,
+          flash_size: msg.flash_size,
+          flash_speed: msg.flash_speed,
+          heap: msg.heap,
+          mac: msg.mac
+        });
         break;
     }
 

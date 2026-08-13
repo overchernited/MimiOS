@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Download, HardDriveDownload } from '@lucide/svelte';
+  import { formatBytes } from '@/lib/format';
 
   export interface MarketplaceItem {
     id: string;
@@ -25,12 +26,7 @@
   const imageOf = (item: MarketplaceItem) =>
     (item.manifest?.image as string | undefined) ?? `https://picsum.photos/seed/${item.id}/200`;
 
-  const formatSize = (bytes?: number) => {
-    if (!bytes) return '';
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
+  const formatSize = (bytes?: number) => (bytes ?? 0 ? formatBytes(bytes!) : '');
 </script>
 
 <article class="flex gap-4 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10">
