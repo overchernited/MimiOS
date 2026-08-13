@@ -4,9 +4,12 @@ node_modules/
 # Build output
 dist/
 build/
+!cortex/build/
 .pio/
 .svelte-kit/
 .vercel/
+dist-electron/
+cortex/electron/.build/
 
 # Environment / secrets (never commit real values)
 .env
