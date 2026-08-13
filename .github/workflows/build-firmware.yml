@@ -53,27 +53,13 @@ jobs:
         run: pio run -e ${{ matrix.env }} -t buildfs
         working-directory: firmware
 
-      - name: Merge Firmware Components
-        run: |
-          pip install esptool
-          
-          python -m esptool --chip ${{ matrix.chip }} merge_bin \
-            -o .pio/build/${{ matrix.env }}/firmware-factory.bin \
-            --flash_mode dio \
-            --flash_size 4MB \
-            0x0000 .pio/build/${{ matrix.env }}/bootloader.bin \
-            0x8000 .pio/build/${{ matrix.env }}/partitions.bin \
-            0x10000 .pio/build/${{ matrix.env }}/firmware.bin \
-            0x290000 .pio/build/${{ matrix.env }}/littlefs.bin
-        working-directory: firmware
-
       - name: Upload ${{ matrix.chip }} firmware
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           node tools/upload-firmware/index.js \
-            ".pio/build/${{ matrix.env }}/firmware-factory.bin" \
+            ".pio/build/${{ matrix.env }}/firmware.bin" \
             "${{ matrix.chip }}" \
             "${{ inputs.version }}"
         working-directory: firmware

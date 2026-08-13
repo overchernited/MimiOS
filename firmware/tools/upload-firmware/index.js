@@ -70,6 +70,7 @@ async function main() {
       version,
       chip,
       file_size: fileSize,
+      type: 'usb',
     })
   });
   if (!dbRes.ok) {
