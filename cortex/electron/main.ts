@@ -25,10 +25,11 @@ async function createWindow() {
     minWidth: 1280,
     minHeight: 780,
     show: false,
-    maximizable: true, // Deshabilita el botón de maximizar/restaurar nativo
+    maximizable: true,
+    fullscreen:true,
     minimizable: false,
-    resizable: false,    // Bloquea el redimensionamiento manual por completo
-    fullscreenable: false,
+    resizable: false,  
+    fullscreenable: true,
     title: 'MimiOS Cortex',
     backgroundColor: '#0a0a0f',
     autoHideMenuBar: true,
@@ -39,7 +40,6 @@ async function createWindow() {
     },
   });
 
-  // Usamos el modo Kiosk o maximizado forzado por pantalla
   win.maximize();
 
   win.once('ready-to-show', () => {
