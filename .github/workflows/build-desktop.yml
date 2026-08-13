@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Número de versión (Ej: 1.0.2)'
+        description: 'Número de versión (Ej: 1.0.0)'
         required: true
         type: string
 
@@ -14,36 +14,8 @@ permissions:
   contents: write
 
 jobs:
-  prepare-release:
-    name: Prepare Draft Release
-    runs-on: ubuntu-latest
-    outputs:
-      release_tag: ${{ steps.set_tag.outputs.tag }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set Release Tag
-        id: set_tag
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "tag=cortex-v${{ inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create GitHub Draft Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.set_tag.outputs.tag }}
-          name: "MimiOS Cortex v${{ inputs.version || github.ref_name }}"
-          draft: true
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   build:
     name: build ${{ matrix.platform }}
-    needs: prepare-release
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -52,11 +24,9 @@ jobs:
           - os: ubuntu-latest
             platform: linux
             command: dist:linux
-            artifact: cortex-linux
           - os: windows-latest
             platform: win
             command: dist:win
-            artifact: cortex-windows
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,19 +47,22 @@ jobs:
         working-directory: cortex
         run: pnpm install --frozen-lockfile
 
-      - name: Build ${{ matrix.platform }}
+      # 1. Compila los instaladores de forma normal (Sin intentar subirlos desde aquí)
+      - name: Build Application
         working-directory: cortex
-        # Forzamos 'always' porque el Draft ya fue creado de forma segura en el paso anterior
-        run: pnpm run ${{ matrix.command }} -- --publish always
+        run: pnpm run ${{ matrix.command }} -- --publish never
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      # 2. Esta acción agarra los archivos generados y los sube directo a un Draft Release
+      - name: Create Draft and Upload Binaries
+        uses: ncipollo/release-action@v1
         with:
-          name: ${{ matrix.artifact }}
-          path: cortex/dist-electron/**
-          if-no-files-found: error
+          tag: "cortex-v${{ inputs.version || github.ref_name }}"
+          name: "MimiOS Cortex v${{ inputs.version || github.ref_name }}"
+          draft: true
+          allowUpdates: true # Permite que Windows y Linux suban archivos al mismo borrador
+          artifacts: "cortex/dist-electron/*.exe,cortex/dist-electron/*.deb,cortex/dist-electron/*.AppImage"
+          token: ${{ secrets.GITHUB_TOKEN }}
