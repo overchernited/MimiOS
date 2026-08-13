@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+
+
+#app, body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+* {
+  user-select: none;
+}
+
+.desktop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-auto-rows: 120px;
+  gap: 10px;
+  padding: 20px;
+  height: 100vh;
+  width: 100vw;
+
+/*   background-image: 
+    linear-gradient(to right, rgba(p, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 255, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
+    
+  background-size: 
+    130px 130px, 
+    130px 130px, 
+    65px 65px, 
+    65px 65px;
+    */
+} 
+
+/* Bordes para cada elemento dentro del grid*/
+/* .desktop-grid > * {
+  border: 2px dashed rgba(255, 255, 0, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+}
+ */
+.inter {
+  font-family: 'Inter', sans-serif;
+}
+
+.montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+@media (max-width: 1200px) {
+  .desktop-grid {
+    transform: scale(0.8);
+    transform-origin: top left;
+  }
+}
+
+@media (max-width: 800px) {
+  .desktop-grid {
+    transform: scale(0.5);
+    transform-origin: top left;
+  }
+}

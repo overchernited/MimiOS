@@ -1,0 +1,16 @@
+import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+import tailwindcss from '@tailwindcss/vite'
+import { apiServer } from './src/server/vite-plugin.ts'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [apiServer(), tailwindcss(), svelte()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      'melanin': path.resolve(__dirname, './src/lib/melanin-ui'),
+      'mimicortex': path.resolve(__dirname, "./src/lib/mimicortex-sdk")
+    }
+  }
+})

@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+:root {
+    --m-primary-color: #3399ff5a;
+    --m-foreground-color: #13477b;
+    --m-accent-color: #3399ff;
+    --m-background-color: #242424;
+    --m-red-color: #FF6D6B;
+    --m-yellow-color: #FFCC00;
+    --m-blue-color: #35E4FF;
+    --m-text-color: #ffff;
+    --m-dark-text-color: #fefefe;
+
+  }
+
+
+.m-panel {
+    
+  border-radius: 30px;
+}
+
+.m-primary-background{
+  background-color: var(--m-primary-color);
+  backdrop-filter: blur(10px);
+}
+
+.m-foreground{
+  background-color: var(--m-foreground-color);
+}
+
+.m-background {
+  background-color: var(--m-background-color);
+}
+
+
+.m-button {
+  font-family: 'Montserrat';
+
+  color: var(--m-text-color);
+  border: 3px solid color-mix(in srgb, var(--m-text-color) 20%, transparent);
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s, scale 0.2s;
+}
+
+.m-button:hover {
+  background-color: var(--m-background-color);
+  color: var(--m-dark-text-color);
+  border-color: color-mix(in srgb, var(--m-accent-color) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-accent-color) 25%, transparent);
+  cursor: pointer;
+  scale: 1.05;
+}
+
+.m-button.accent {
+  background-color: var(--m-accent-color);
+}
+
+.m-button.accent:hover {
+  background-color: var(--m-background-color);
+  color: var(--m-dark-text-color);
+  border-color: color-mix(in srgb, var(--m-accent-color) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-accent-color) 25%, transparent);
+}
+
+.m-button.foreground {
+  background-color: var(--m-foreground-color);
+}
+
+.m-button.foreground:hover {
+  background-color: var(--m-background-color);
+  color: var(--m-dark-text-color);
+  border-color: color-mix(in srgb, var(--m-foreground-color) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-foreground-color) 25%, transparent);
+}
+
+.m-button.background {
+  background-color: var(--m-background-color);
+  color: var(--m-dark-text-color);
+  border-color: color-mix(in srgb, var(--m-dark-text-color) 20%, transparent);
+}
+
+.m-button.m-button.background:hover {
+  background-color: var(--m-accent-color);
+  color: var(--m-text-color);
+  border-color: color-mix(in srgb, var(--m-background-color) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-background-color) 25%, transparent);
+}
+
+.m-button.primary {
+  background-color: var(--m-primary-color);
+}
+
+.m-button.primary:hover {
+  background-color: var(--m-background-color);
+  color: var(--m-dark-text-color);
+  border-color: color-mix(in srgb, var(--m-primary-color) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-primary-color) 25%, transparent);
+}
+
+.m-input {
+  font-family: 'Montserrat';
+  background-color: color-mix(in srgb, var(--m-text-color) 12%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--m-text-color);
+  border: 3px solid color-mix(in srgb, var(--m-text-color) 20%, transparent);
+  border-radius: 30px;
+  padding: 14px 20px;
+  font-weight: 500;
+  outline: none;
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 10%);
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.m-input::placeholder {
+  color: color-mix(in srgb, var(--m-text-color) 45%, transparent);
+}
+
+.m-input:hover {
+  background-color: color-mix(in srgb, var(--m-text-color) 18%, transparent);
+  border-color: color-mix(in srgb, var(--m-accent-color) 40%, transparent);
+}
+
+.m-input:focus {
+  border-color: var(--m-accent-color);
+  background-color: color-mix(in srgb, var(--m-text-color) 20%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-accent-color) 25%, transparent);
+}
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--m-blue-color) 70%, transparent) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--m-blue-color) 70%, transparent);
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--m-blue-color);
+}
+
