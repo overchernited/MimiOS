@@ -23,7 +23,6 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !binPath || !chip || !version
 }
 
 const id = `mimios-base-${chip}`;
-const fsBinPath = binPath.replace(/\.bin$/, '-fs.bin');
 const bucket = 'cartridges';
 
 async function uploadFile(path, storagePath) {
@@ -50,23 +49,11 @@ async function uploadFile(path, storagePath) {
 }
 
 async function main() {
-  const fs = await import('node:fs/promises');
-
-  const fileSize = await uploadFile(binPath, `firmware/${id}.bin`);
-  console.log(`[upload] ${id} (${fileSize} bytes) -> firmware/${id}.bin`);
-
-  let fsSize = 0;
-  try {
-    await fs.access(fsBinPath);
-    fsSize = await uploadFile(fsBinPath, `firmware/${id}-fs.bin`);
-    console.log(`[upload] ${id}-fs (${fsSize} bytes) -> firmware/${id}-fs.bin`);
-  } catch (err) {
-    if (err.code !== 'ENOENT') throw err;
-    console.log(`[upload] no filesystem image at ${fsBinPath}, skipping`);
-  }
+  const fileSize = await uploadFile(binPath, `${id}.bin`);
+  console.log(`[upload] ${id} (${fileSize} bytes) -> ${id}.bin`);
 
   // DB: upsert the firmware row.
-  const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/firmware?on_conflict=id`, {
+  const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/cartridges?on_conflict=id`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
@@ -82,7 +69,6 @@ async function main() {
       version,
       chip,
       file_size: fileSize,
-      fs_size: fsSize
     })
   });
   if (!dbRes.ok) {
