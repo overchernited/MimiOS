@@ -12,5 +12,18 @@ export default defineConfig({
       'melanin': path.resolve(__dirname, './src/lib/melanin-ui'),
       'mimicortex': path.resolve(__dirname, "./src/lib/mimicortex-sdk")
     }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        ...Object.fromEntries(
+          (await import('glob')).sync('./src/apps/**/*.svelte').map(file => [
+            file.replace('./src/', '').replace('.svelte', ''),
+            file
+          ])
+        )
+      }
+    }
   }
 })

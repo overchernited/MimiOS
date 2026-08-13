@@ -1,14 +1,28 @@
 import type { Application, NewApplication } from "@/components/windowManager/types"
 
+const appModules = import.meta.glob('/src/apps/**/*.svelte');
+
 export class windowStore {
     items = $state<Application[]>([])
 
- 
     async openApp(app: NewApplication) {
         
         if (!customElements.get(app.applicationTag)) {
             try {
-                await import(/* @vite-ignore */ app.sourceUrl);
+                if (app.sourceUrl.startsWith('http://') || app.sourceUrl.startsWith('https://')) {
+                    await import(/* @vite-ignore */ app.sourceUrl);
+                } else {
+                    const loadApp = appModules[app.sourceUrl];
+                    
+                    if (!loadApp) {
+                        throw new Error(
+                            `La ruta "${app.sourceUrl}" no coincide con ningún archivo .svelte en /src/apps/. ` +
+                            `Asegúrate de que empiece con "/src/apps/" y termine en ".svelte"`
+                        );
+                    }
+
+                    await loadApp(); 
+                }
             } catch (error) {
                 console.error(`Could not load application from: ${app.sourceUrl}`, error);
                 return;
@@ -95,7 +109,6 @@ export class windowStore {
 
         this.focus(id);
     }
-
 
     getFocusedApp() {
         return this.items.find(w => w.focused)?.id;

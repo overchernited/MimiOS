@@ -63,6 +63,7 @@
     const m = item.manifest ?? {};
     return {
       tagName: (m.tag_name as string) ?? `${item.id}-widget`,
+      sourceUrl: (m.source_url as string) ?? '',
       gridPosition: {
         col: (m.col as number) ?? 1,
         row: (m.row as number) ?? 1,
