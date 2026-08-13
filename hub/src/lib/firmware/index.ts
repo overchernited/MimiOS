@@ -7,9 +7,10 @@ const BUCKET = 'cartridges';
 
 export async function listFirmwares(): Promise<Firmware[]> {
   const { data, error } = await supabase()
-    .from('firmware')
+    .from('cartridges')
     .select('*')
-    .order('chip');
+    .order('chip')
+    .eq('author', 'MimiOS');
   if (error) throw error;
   return (data as unknown as Firmware[]) ?? [];
 }
