@@ -4,6 +4,7 @@
   "widgets": [
     {
       "tagName": "taskbar-widget",
+      "sourceUrl": "/src/widgets/taskbar/taskbar.svelte",
       "gridPosition": {
         "col": 6,
         "row": 7,
