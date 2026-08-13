@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Firmware } from '$lib/types';
   import { formatBytes } from '$lib/marketplace';
-  import { firmwareDownloadUrl } from '$lib/firmware';
+  import { firmwareDownloadUrl, filesystemDownloadUrl } from '$lib/firmware';
   import TerminalWindow from '../terminal-window.svelte';
 
   let { items }: { items: Firmware[] } = $props();
@@ -26,23 +26,25 @@
   );
 
   const downloadUrl = $derived(selected ? firmwareDownloadUrl(selected.id) : null);
+  const fsUrl = $derived(selected ? filesystemDownloadUrl(selected.id) : null);
+  const hasFs = $derived(Boolean(selected && selected.fs_size && fsUrl));
 
-  async function handleDownload() {
-    if (downloading || !downloadUrl || !selected) return;
+  async function handleDownload(url: string, name: string) {
+    if (downloading) return;
     downloading = true;
     msg = null;
     try {
-      const res = await fetch(downloadUrl);
+      const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+      const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `${selected.id}.bin`;
+      a.href = objectUrl;
+      a.download = name;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(objectUrl);
       msg = '> download started';
     } catch (err) {
       msg = `> failed — ${err instanceof Error ? err.message : String(err)}`;
@@ -88,15 +90,33 @@
         <li>
           <span class="text-accent">✓</span> size — <span class="text-fg">{selected ? formatBytes(selected.file_size ?? 0) : '—'}</span>
         </li>
+        {#if selected && selected.fs_size}
+          <li>
+            <span class="text-accent">✓</span> filesystem — <span class="text-fg">{formatBytes(selected.fs_size)}</span>
+          </li>
+        {/if}
         <li><span class="text-accent">✓</span> flash — <span class="text-fg">USB + OTA</span></li>
         <li><span class="text-accent">✓</span> ota — <span class="text-fg">dual partition, auto-rollback</span></li>
       </ul>
     </div>
 
     <div class="flex flex-col items-start gap-2 md:items-end">
-      <button class="btn" onclick={handleDownload} disabled={downloading || !downloadUrl || !selected}>
+      <button
+        class="btn"
+        onclick={() => selected && downloadUrl && handleDownload(downloadUrl, `${selected.id}.bin`)}
+        disabled={downloading || !downloadUrl || !selected}
+      >
         {downloading ? 'starting download…' : 'download .bin'}
       </button>
+      {#if hasFs && selected}
+        <button
+          class="btn btn-ghost"
+          onclick={() => fsUrl && handleDownload(fsUrl, `${selected.id}-fs.bin`)}
+          disabled={downloading || !fsUrl}
+        >
+          download filesystem image
+        </button>
+      {/if}
       {#if msg}
         <p class="m-0 text-xs text-dim">{msg}</p>
       {/if}

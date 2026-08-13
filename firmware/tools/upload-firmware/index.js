@@ -23,18 +23,13 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !binPath || !chip || !version
 }
 
 const id = `mimios-base-${chip}`;
-const storagePath = `firmware/${id}.bin`;
+const fsBinPath = binPath.replace(/\.bin$/, '-fs.bin');
 const bucket = 'cartridges';
 
-async function main() {
+async function uploadFile(path, storagePath) {
   const fs = await import('node:fs/promises');
-  const bin = await fs.readFile(binPath);
-  const fileSize = bin.length;
-
-  console.log(`[upload] ${id} (${fileSize} bytes) -> ${storagePath}`);
-
-  // Storage: public bucket `cartridges`, folder `firmware/`.
-  const storageRes = await fetch(
+  const data = await fs.readFile(path);
+  const res = await fetch(
     `${SUPABASE_URL}/storage/v1/object/${bucket}/${storagePath}`,
     {
       method: 'POST',
@@ -44,14 +39,31 @@ async function main() {
         'Content-Type': 'application/octet-stream',
         'x-upsert': 'true'
       },
-      body: bin
+      body: data
     }
   );
-  if (!storageRes.ok) {
-    const text = await storageRes.text();
-    throw new Error(`storage upload failed: ${storageRes.status} ${text}`);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`storage upload failed (${storagePath}): ${res.status} ${text}`);
   }
-  console.log('[upload] storage ok');
+  return data.length;
+}
+
+async function main() {
+  const fs = await import('node:fs/promises');
+
+  const fileSize = await uploadFile(binPath, `firmware/${id}.bin`);
+  console.log(`[upload] ${id} (${fileSize} bytes) -> firmware/${id}.bin`);
+
+  let fsSize = 0;
+  try {
+    await fs.access(fsBinPath);
+    fsSize = await uploadFile(fsBinPath, `firmware/${id}-fs.bin`);
+    console.log(`[upload] ${id}-fs (${fsSize} bytes) -> firmware/${id}-fs.bin`);
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err;
+    console.log(`[upload] no filesystem image at ${fsBinPath}, skipping`);
+  }
 
   // DB: upsert the firmware row.
   const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/firmware?on_conflict=id`, {
@@ -69,7 +81,8 @@ async function main() {
       author: 'MimiOS',
       version,
       chip,
-      file_size: fileSize
+      file_size: fileSize,
+      fs_size: fsSize
     })
   });
   if (!dbRes.ok) {

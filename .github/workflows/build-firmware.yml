@@ -41,6 +41,10 @@ jobs:
         run: pio run -e ${{ matrix.env }}
         working-directory: firmware
 
+      - name: Build filesystem ${{ matrix.env }}
+        run: pio run -e ${{ matrix.env }} -t buildfs
+        working-directory: firmware
+
       - name: Resolve version
         id: version
         run: |

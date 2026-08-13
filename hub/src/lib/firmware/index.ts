@@ -19,3 +19,9 @@ export function firmwareDownloadUrl(id: string): string | null {
   if (!url) return null;
   return `${url}/storage/v1/object/public/${BUCKET}/${FIRMWARE_FOLDER}/${id}.bin`;
 }
+
+export function filesystemDownloadUrl(id: string): string | null {
+  const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  if (!url) return null;
+  return `${url}/storage/v1/object/public/${BUCKET}/${FIRMWARE_FOLDER}/${id}-fs.bin`;
+}
