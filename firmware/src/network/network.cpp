@@ -21,6 +21,14 @@ extern Preferences preferences;
 #define LED_PIN 8
 #endif
 
+#ifndef OS_NAME
+#define OS_NAME "Mimi OS"
+#endif
+
+#ifndef FIRMWARE_VERSION
+#define FIRMWARE_VERSION "0.1.0"
+#endif
+
 WebServer server(80);
 
 static WebSocketsClient webSocket;
@@ -174,6 +182,7 @@ static void sendPreferences() {
     out["type"] = "preferences";
     out["device_id"] = deviceId;
     out["config"] = stored;
+    out["os"] = OS_NAME;
     out["cartridge"] = loadCartridge();
     out["cartridge_version"] = loadCartridgeVersion();
     out["model"] = ESP.getChipModel();
@@ -182,8 +191,8 @@ static void sendPreferences() {
     out["revision"] = ESP.getChipRevision();
     out["flash_size"] = ESP.getFlashChipSize();
     out["flash_speed"] = ESP.getFlashChipSpeed();
-    out["free_heap"] = ESP.getFreeHeap();
-    out["mac"] = ESP.getChipMacAddress();
+    out["heap"] = ESP.getHeapSize();
+    out["mac"] = WiFi.macAddress();
 
 
     String body;
