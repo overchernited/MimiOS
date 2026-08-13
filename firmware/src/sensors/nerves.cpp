@@ -4,7 +4,8 @@
 #include <freertos/queue.h>  
 #include <soc/gpio_reg.h>
 #include <soc/soc.h>
-
+#include <esp_ota_ops.h>
+#include <LittleFS.h>
 
 #include "sensors.h"
 #include "../globals.h"
@@ -15,14 +16,14 @@
 
 void TaskNerves(void *pvParameters) {
     TickType_t xLastWakeTime = xTaskGetTickCount();
-    uint32_t total_flash = ESP.getFlashChipSize();
-    uint32_t used_flash = ESP.getSketchSize();
+    const esp_partition_t* running_part = esp_ota_get_running_partition();
+    uint32_t max_app_size = running_part->size;
     float lastTemp = NAN;
     SystemData data;
     
     for (;;) {
         data.free_sram = esp_get_free_heap_size();
-        data.free_flash = total_flash - used_flash;
+        data.free_flash = max_app_size - ESP.getSketchSize();
         data.gpio_mask = REG_READ(GPIO_IN_REG);
         data.voltage = (analogRead(VOLTAGE_PIN) * ADC_VOLTAGE) / ADC_RESOLUTION;
 
