@@ -55,7 +55,8 @@ jobs:
             --flash_size 4MB \
             0x0000 .pio/build/${{ matrix.env }}/bootloader.bin \
             0x8000 .pio/build/${{ matrix.env }}/partitions.bin \
-            0x10000 .pio/build/${{ matrix.env }}/firmware.bin
+            0x10000 .pio/build/${{ matrix.env }}/firmware.bin \
+            0x290000 .pio/build/${{ matrix.env }}/littlefs.bin
         working-directory: firmware
 
       - name: Resolve version
