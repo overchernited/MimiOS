@@ -33,10 +33,12 @@ export const auth = {
   init,
 
   async signUp(email: string, password: string, username: string) {
+    const emailRedirectTo =
+      typeof window !== 'undefined' ? window.location.origin : undefined;
     const { error } = await supabase().auth.signUp({
       email,
       password,
-      options: { data: { username } }
+      options: { data: { username }, emailRedirectTo }
     });
     if (error) throw error;
   },
