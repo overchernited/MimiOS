@@ -97,7 +97,11 @@
 
 
 .terminal-card.blue {
-	@apply border-accent/35 bg-accent/5 ;
+	@apply border-accent/35 bg-accent/5 transition-transform duration-150;
+}
+
+.terminal-card.blue:hover {
+	@apply bg-accent/30 scale-105 ;
 }
 
 .btn {
