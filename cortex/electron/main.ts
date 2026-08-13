@@ -28,7 +28,7 @@ async function createWindow() {
     maximizable: true,
     fullscreen:true,
     minimizable: false,
-    resizable: false,  
+    resizable: true,  
     fullscreenable: true,
     title: 'MimiOS Cortex',
     backgroundColor: '#0a0a0f',
