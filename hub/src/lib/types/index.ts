@@ -31,7 +31,7 @@ export interface Firmware {
   version: string;
   chip: string;
   file_size: number;
-  url?: string;
+  file_path?: string;
   created_at?: string;
   updated_at?: string;
 }
