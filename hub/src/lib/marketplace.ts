@@ -6,12 +6,15 @@ export type CatalogKind = (typeof CATALOG_KINDS)[number];
 
 
 export const marketplace = {
-  async list(kind: CatalogKind) {
+async list(kind: CatalogKind) {
     const orderColumn = kind === 'cartridges' ? 'created_at' : 'downloads';
-    const { data, error } = await supabase()
-      .from(kind)
-      .select('*')
-      .order(orderColumn, { ascending: false });
+    const baseQuery = supabase().from(kind).select('*');
+
+    const { data, error } = await (kind === 'cartridges' 
+      ? baseQuery.eq('type', 'ota') 
+      : baseQuery
+    ).order(orderColumn, { ascending: false });
+
     if (error) throw error;
     return data as unknown as CatalogEntry[];
   },

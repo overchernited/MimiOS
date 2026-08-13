@@ -4,10 +4,17 @@ const BUCKET = 'cartridges';
 
 export const marketplace = {
   async list(kind: string) {
-    const { data, error } = await supabase.from(kind).select('*').order('downloads', { ascending: false });
+    const query = supabase.from(kind).select('*');
+
+    const { data, error } = await (kind === 'cartridges' 
+      ? query.eq('type', 'ota') 
+      : query
+    ).order('downloads', { ascending: false });
+
     if (error) throw error;
     return data;
   },
+
 
   async get(kind: string, id: string) {
     const { data, error } = await supabase.from(kind).select('*').eq('id', id).maybeSingle();

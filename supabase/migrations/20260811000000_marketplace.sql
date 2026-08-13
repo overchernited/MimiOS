@@ -40,6 +40,7 @@ create table if not exists cartridges (
   author      text not null default 'MimiOS',
   version     text not null default '1.0.0',
   chip        text not null default 'auto',
+  type        text not null default 'ota',
   img         text not null default '',
   manifest    jsonb not null default '{}'::jsonb,
   file_path   text not null default '',

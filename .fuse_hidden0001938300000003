@@ -1,0 +1,29 @@
+[33m65c596c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix: Download from cartridges using file_path instead of ambigous names.
+[33m0f0f25d[m Feat: Add Filepath to firmware uploads.
+[33m0a266d8[m Feat: Add version to file name at the bucket.
+[33m1813ffd[m FIX: Esp32 and Esp32S2 dont use native usbc serial was throwing a error at the moment of the build using 'build-firmware'
+[33m33f70af[m Fix: build-firmware now is actioned by workflow-action.
+[33mb744dfe[m Added Card Component to config built-in app.
+[33m150808e[m Feat: Added more system static information about chip: model, cores, revision, cpu,freq, flash_size, flash_speed, mac, healp, now avaible in the config app.
+[33medb4b4d[m Feat: Added more static data sent at preferences.
+[33m3aaf62c[m fix(firmware): correct flash free space calculation using active partition size
+[33mb7453c9[m Load base firmwares from cartridges
+[33m49af0c4[m fix: FS is being merged into one bin, 'fs_size' column not used.
+[33m15aaf6a[m Feat: Added version input to workflow instead of resolving version.
+[33m2867f81[m Fix: Added impotency to supabase db push avoiding errors, deleted firmware table by new uploading url.
+[33m56ff908[m Fix: Upload to cartridges instead to firmwares, Filesystem image already being merged by github workflow 'build-firmware'.
+[33m5d59172[m FIX: Mount FileSystem memory adress base firmwares.
+[33m5a6f529[m Fix: Prints not showing because USB_MODE, changed to 1.
+[33m1b7a663[m Merge firmware partitions, bootloader, app into one bin.
+[33mb861747[m Added source url to firmware
+[33md2bae1d[m feat(widget-store): expand glob patterns to include widgets directory
+[33mb860d4c[m feat(store): support remote and local loading for applications and widgets
+[33m7df91b7[m Fix: Resizable fullscreen bug on GNOME/KDE PLASMA desktops.
+[33m44c4215[m Maximize and min width cortex app added.
+[33md7e2c8c[m Fix: Maximize and min width cortex app added.
+[33m979f99c[m Fix: Added build workflow and draft upload
+[33mad848aa[m Fix: Added build workflow and draft upload
+[33mdf772fa[m Feat: Build desktop files and upload to release drafts.
+[33mdc59a33[m Fix: (Github Actions): Update build-desktop.yml and package.json for draft releases
+[33mc819cd0[m feat: force window to stay permanently maximized and disable resizing
+[33md43db20[m fix: Added SVG to cortex app.

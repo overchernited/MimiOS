@@ -11,6 +11,7 @@ export interface CatalogItem {
   manifest?: Record<string, unknown>;
   file_size: number;
   version: string;
+  type: 'ota' | 'usb';
   url?: string;
   file_path?: string;
   downloads?: number;
@@ -23,18 +24,6 @@ export interface CatalogEntry extends CatalogItem {
   updated_at?: string;
 }
 
-export interface Firmware {
-  id: string;
-  title: string;
-  description: string;
-  author: string;
-  version: string;
-  chip: string;
-  file_size: number;
-  file_path?: string;
-  created_at?: string;
-  updated_at?: string;
-}
 
 export interface CatalogSection {
     id: string;

@@ -23,15 +23,22 @@
       />
       <div class="min-w-0 flex-1">
         <p class="m-0 truncate text-2xl font-bold text-fg hover:underline">{item.title}</p>
-        <p class="m-0 truncate text-sm text-dim">
-          {item.author} · v{item.version}
+        <p class="m-0 truncate text-sm text-fg">
+        {item.author}
+        <span class="chip-tag chip-yellow">
+          v{item.version}
+        </span>
           {#if item.chip}<span
-              class="ml-1 rounded bg-accent/10 px-1.5 py-px text-[10px] text-accent"
+              class="chip-blue chip-tag"
               >{item.chip}</span
             >{/if}
           {#if item.file_size}<span
-              class="ml-1 rounded bg-white/5 px-1.5 py-px text-[10px] text-faint"
+              class="chip-red chip-tag"
               >{formatBytes(item.file_size)}</span
+            >{/if}
+            {#if item.file_size}<span
+              class="chip-green chip-tag"
+              >{item.type.toUpperCase()}</span
             >{/if}
         </p>
         <p class="m-0 text-sm text-dim">{item.description}</p>

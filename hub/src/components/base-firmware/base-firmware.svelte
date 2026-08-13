@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { Firmware } from "$lib/types";
+  import type { CatalogItem } from "$lib/types";
   import { catalogDownloadUrl, formatBytes } from "$lib/marketplace";
   import TerminalWindow from "../terminal-window.svelte";
 
-  let { items }: { items: Firmware[] } = $props();
+  let { items }: { items: CatalogItem[] } = $props();
 
   const CHIP_LABELS: Record<string, string> = {
     esp32: "ESP32",
@@ -104,11 +104,7 @@
         </li>
         <li>
           <span class="text-accent">✓</span> flash —
-          <span class="text-fg">USB + OTA</span>
-        </li>
-        <li>
-          <span class="text-accent">✓</span> ota —
-          <span class="text-fg">dual partition, auto-rollback</span>
+          <span class="text-fg">{selected?.type}</span>
         </li>
       </ul>
     </div>

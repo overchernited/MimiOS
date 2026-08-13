@@ -12,6 +12,7 @@
     downloads: number;
     chip?: string;
     file_size?: number;
+    type?: string;
   }
 
   let { item, installing = false, progress = 0, onInstall }: {
@@ -45,6 +46,7 @@
       {item.author} · v{item.version}
       {#if item.chip}<span class="ml-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase">{item.chip}</span>{/if}
       {#if item.file_size}<span class="ml-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{formatSize(item.file_size)}</span>{/if}
+        {#if item.file_size}<span class="ml-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{item.type?.toLocaleUpperCase()}</span>{/if}
     </p>
     <p class="mt-1 line-clamp-2 text-sm opacity-60">{item.description}</p>
 

@@ -5,14 +5,14 @@
   import BaseFirmware from '../components/base-firmware/base-firmware.svelte';
   import { marketplace } from '$lib/marketplace';
   import { listFirmwares } from '$lib/firmware';
-  import type { CatalogItem, Firmware } from '$lib/types';
+  import type { CatalogItem } from '$lib/types';
   import { Puzzle, AppWindow, Cpu } from '@lucide/svelte';
   import Hero from '../components/hero.svelte';
 
   let widgets: CatalogItem[] = $state([]);
   let apps: CatalogItem[] = $state([]);
   let cartridges: CatalogItem[] = $state([]);
-  let firmwares: Firmware[] = $state([]);
+  let firmwares: CatalogItem[] = $state([]);
 
   let loading = $state(true);
   let error: string | null = $state(null);
