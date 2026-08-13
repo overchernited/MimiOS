@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="880" viewBox="0 0 1280 880">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="0%" r="120%">
+      <stop offset="0%" stop-color="#111A2E"/>
+      <stop offset="100%" stop-color="#0A0F1C"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#35E4FF"/>
+      <stop offset="100%" stop-color="#3DD68C"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arr-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#35E4FF"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3DD68C"/>
+    </marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#FF6D6B"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="880" rx="24" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="640" y="52" text-anchor="middle" font-family="Montserrat, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="2" fill="#E6EDF7" filter="url(#glow)">MimiOS — Architecture</text>
+  <text x="640" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#8A97B5">ESP32-C3 · Node relay server · Svelte frontend · Supabase catalog</text>
+
+  <!-- ===================== ESP32 ===================== -->
+  <g>
+    <rect x="30" y="120" width="360" height="600" rx="18" fill="#131B2E" stroke="#2A3550" stroke-width="1.5"/>
+    <rect x="30" y="120" width="360" height="46" rx="18" fill="#0E1730"/>
+    <rect x="30" y="148" width="360" height="18" fill="#0E1730"/>
+    <circle cx="56" cy="143" r="7" fill="#35E4FF" opacity="0.9"/>
+    <text x="74" y="148" font-family="Montserrat, system-ui, sans-serif" font-size="16" font-weight="700" fill="#E6EDF7">ESP32-C3 · Firmware</text>
+    <text x="374" y="148" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#8A97B5">PlatformIO · src/</text>
+
+    <!-- network/main -->
+    <rect x="45" y="180" width="330" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="60" y="200" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">main.cpp · network.cpp</text>
+    <text x="60" y="218" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">onWSEvent: WStype_TEXT (JSON) + WStype_BIN (OTA)</text>
+
+    <!-- command table -->
+    <rect x="45" y="248" width="330" height="66" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="60" y="268" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">Command table</text>
+    <text x="60" y="286" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">gpio · reboot · validate_auth · set_preference</text>
+    <text x="60" y="302" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">set_cartridge · ota_start/end/cancel/rollback</text>
+
+    <!-- OTA -->
+    <rect x="45" y="324" width="330" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="60" y="344" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">Dual-partition OTA</text>
+    <text x="60" y="362" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">Update.begin/write/end · automatic rollback (ota_0/ota_1)</text>
+
+    <!-- NVS -->
+    <rect x="45" y="392" width="330" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="60" y="412" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">NVS</text>
+    <text x="60" y="430" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">user-config (username/userpass) · system-config (cartridge)</text>
+
+    <!-- LittleFS -->
+    <rect x="45" y="460" width="330" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="60" y="480" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">LittleFS</text>
+    <text x="60" y="498" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">/config/prefs.json → survives OTA (prefs)</text>
+
+    <!-- footer badge -->
+    <rect x="45" y="640" width="330" height="60" rx="10" fill="#0E1730" stroke="#2A3550"/>
+    <text x="210" y="667" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#8A97B5">ESP32-C3 DevKitM-1 · RAM 12.5% · Flash 76%</text>
+    <text x="210" y="687" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#8A97B5">WS + WiFi + GPIO + preferences server</text>
+  </g>
+
+  <!-- ===================== SERVER ===================== -->
+  <g>
+    <rect x="470" y="250" width="290" height="230" rx="18" fill="#131B2E" stroke="#2A3550" stroke-width="1.5"/>
+    <rect x="470" y="250" width="290" height="46" rx="18" fill="#0E1730"/>
+    <rect x="470" y="278" width="290" height="18" fill="#0E1730"/>
+    <circle cx="496" cy="273" r="7" fill="#3DD68C" opacity="0.9"/>
+    <text x="514" y="278" font-family="Montserrat, system-ui, sans-serif" font-size="16" font-weight="700" fill="#E6EDF7">Server Node :3000</text>
+
+    <rect x="485" y="308" width="260" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="500" y="328" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#3DD68C">WebSocket relay</text>
+    <text x="500" y="346" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">maps deviceId ↔ active connection</text>
+
+    <rect x="485" y="362" width="260" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="500" y="382" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#3DD68C">Forwards only</text>
+    <text x="500" y="400" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">stateless · stores nothing</text>
+
+    <text x="615" y="440" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#FF6D6B">✕ never touches the Supabase catalog</text>
+  </g>
+
+  <!-- ===================== BROWSER ===================== -->
+  <g>
+    <rect x="820" y="120" width="430" height="470" rx="18" fill="#131B2E" stroke="#2A3550" stroke-width="1.5"/>
+    <rect x="820" y="120" width="430" height="46" rx="18" fill="#0E1730"/>
+    <rect x="820" y="148" width="430" height="18" fill="#0E1730"/>
+    <circle cx="846" cy="143" r="7" fill="#A78BFA" opacity="0.9"/>
+    <text x="864" y="148" font-family="Montserrat, system-ui, sans-serif" font-size="16" font-weight="700" fill="#E6EDF7">Browser · Svelte 5</text>
+    <text x="1234" y="148" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#8A97B5">cortex/</text>
+
+    <rect x="835" y="180" width="400" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="200" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#A78BFA">Desktop + apps</text>
+    <text x="850" y="218" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">custom elements · wallpaper · windows · OTA overlay</text>
+
+    <rect x="835" y="236" width="400" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="256" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#A78BFA">Stores (SDK: typeof OS)</text>
+    <text x="850" y="274" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">notifications · logs · windows · sensor · storage</text>
+    <text x="850" y="288" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">auth.svelte.ts (login → validate_auth) · ota.svelte.ts</text>
+
+    <rect x="835" y="304" width="400" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="324" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#A78BFA">ws.svelte.ts · transport</text>
+    <text x="850" y="342" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">send / sendBinary / validateAuth / wsBufferedAmount</text>
+
+    <rect x="835" y="360" width="400" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="380" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#A78BFA">Marketplace (app)</text>
+    <text x="850" y="398" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">apps · widgets · cartridges · password modal for OTA</text>
+
+    <rect x="835" y="416" width="400" height="58" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="436" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#A78BFA">AuthStore</text>
+    <text x="850" y="454" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">login() reused in the OTA modal → receives the boolean</text>
+    <text x="850" y="468" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">validated against the ESP32's NVS credentials (not against Supabase)</text>
+  </g>
+
+  <!-- ===================== SUPABASE ===================== -->
+  <g>
+    <rect x="820" y="620" width="430" height="230" rx="18" fill="#131B2E" stroke="#2A3550" stroke-width="1.5"/>
+    <rect x="820" y="620" width="430" height="46" rx="18" fill="#0E1730"/>
+    <rect x="820" y="648" width="430" height="18" fill="#0E1730"/>
+    <circle cx="846" cy="643" r="7" fill="#F5C86B" opacity="0.9"/>
+    <text x="864" y="648" font-family="Montserrat, system-ui, sans-serif" font-size="16" font-weight="700" fill="#E6EDF7">Supabase · Catalog</text>
+    <text x="1234" y="648" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#8A97B5">supabase/migrations/</text>
+
+    <rect x="835" y="680" width="400" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="700" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#F5C86B">Tables</text>
+    <text x="850" y="718" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">apps · widgets · cartridges (with user_id + version + file_size)</text>
+
+    <rect x="835" y="736" width="400" height="46" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="756" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#F5C86B">Storage</text>
+    <text x="850" y="774" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">cartridges/*.bin → public URL (no session) to download</text>
+
+    <rect x="835" y="792" width="400" height="52" rx="10" fill="#182240" stroke="#2A3550"/>
+    <text x="850" y="810" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="700" fill="#F5C86B">RLS + function</text>
+    <text x="850" y="827" font-family="Inter, system-ui, sans-serif" font-size="10.5" fill="#B7C3DA">anon: SELECT + download · auth: INSERT + own DELETE · increment_downloads (only write)</text>
+  </g>
+
+  <!-- ===================== ARROWS ===================== -->
+  <!-- ESP32 <-> Server -->
+  <line x1="392" y1="300" x2="468" y2="300" stroke="#35E4FF" stroke-width="2.5" marker-start="url(#arr-cyan)" marker-end="url(#arr-cyan)"/>
+  <line x1="392" y1="360" x2="468" y2="360" stroke="#35E4FF" stroke-width="2.5" marker-start="url(#arr-cyan)" marker-end="url(#arr-cyan)"/>
+  <text x="430" y="286" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#35E4FF">WebSocket</text>
+  <text x="430" y="380" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10.5" fill="#8A97B5">commands +</text>
+  <text x="430" y="395" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10.5" fill="#8A97B5">OTA chunks (.bin)</text>
+
+  <!-- Server <-> Browser -->
+  <line x1="762" y1="300" x2="818" y2="300" stroke="#3DD68C" stroke-width="2.5" marker-start="url(#arr-green)" marker-end="url(#arr-green)"/>
+  <line x1="762" y1="360" x2="818" y2="360" stroke="#3DD68C" stroke-width="2.5" marker-start="url(#arr-green)" marker-end="url(#arr-green)"/>
+  <text x="790" y="286" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#3DD68C">WebSocket</text>
+  <text x="790" y="380" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10.5" fill="#8A97B5">relay:</text>
+  <text x="790" y="395" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10.5" fill="#8A97B5">deviceId ↔ conn</text>
+
+  <!-- Browser <-> Supabase (REST) -->
+  <line x1="1035" y1="592" x2="1035" y2="618" stroke="#F5C86B" stroke-width="2.5" marker-start="url(#arr-green)" marker-end="url(#arr-cyan)"/>
+  <rect x="1055" y="576" width="180" height="34" rx="8" fill="#1A2035" stroke="#2A3550"/>
+  <text x="1145" y="596" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#F5C86B">Direct REST (no server)</text>
+  <text x="1145" y="606" font-family="Inter, system-ui, sans-serif" font-size="0" fill="none"> </text>
+  <text x="1145" y="606" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9.5" fill="#8A97B5">list · download .bin · increment_downloads</text>
+
+  <!-- OTA path note -->
+  <rect x="30" y="745" width="360" height="105" rx="14" fill="#0E1730" stroke="#2A3550"/>
+  <text x="210" y="770" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#35E4FF">OTA flow (cartridge)</text>
+  <text x="210" y="794" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">1 · Supabase → Browser: download .bin (REST)</text>
+  <text x="210" y="812" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">2 · Browser → ESP32: ota_start + chunks (WS)</text>
+  <text x="210" y="830" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#B7C3DA">3 · reboot → new partition · rollback on failure</text>
+</svg>

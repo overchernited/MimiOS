@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "author": "VaporOS Developer",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-c3-devkitm-1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "btn1", "top": 100, "left": 50, "attrs": { "color": "green" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "btn1:1.l", "esp:9", "green", [ "v0" ] ],
+    [ "btn1:2.l", "esp:GND", "black", [ "v0" ] ]
+  ]
+}
