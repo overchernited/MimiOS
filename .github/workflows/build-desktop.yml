@@ -1,0 +1,63 @@
+name: build-desktop
+
+on:
+  push:
+    tags: ['cortex-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            command: dist:linux
+            artifact: cortex-linux
+          - os: windows-latest
+            platform: win
+            command: dist:win
+            artifact: cortex-windows
+          - os: macos-latest
+            platform: mac
+            command: dist:mac
+            artifact: cortex-macos
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: cortex/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: cortex
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.platform }}
+        working-directory: cortex
+        run: pnpm run ${{ matrix.command }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: cortex/dist-electron/**
+          if-no-files-found: error
