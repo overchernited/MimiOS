@@ -62,7 +62,8 @@
     "publish": {
       "provider": "github",
       "owner": "overchernited",
-      "repo": "MimiOS"
+      "repo": "MimiOS",
+      "releaseType": "draft"
     }
   },
   "devDependencies": {
