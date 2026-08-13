@@ -104,3 +104,4 @@ GitHub Actions builds the firmware matrix on `main` pushes and `v*` tags, then u
 
 - [`docs/architecture.md`](docs/architecture.md) — architecture and data channels
 - [`docs/OTA.md`](docs/OTA.md) — over-the-air update flow
+- [`docs/deploy.md`](docs/deploy.md) — deploying the schema to Supabase cloud and wiring the CI
