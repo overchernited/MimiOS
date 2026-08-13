@@ -1,0 +1,62 @@
+name: build-firmware
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build ${{ matrix.chip }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - env: esp32
+            chip: esp32
+          - env: esp32-s3
+            chip: esp32s3
+          - env: esp32-c3
+            chip: esp32c3
+          - env: esp32-s2
+            chip: esp32s2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PlatformIO
+        run: pip install --user platformio
+
+      - name: Build ${{ matrix.env }}
+        run: pio run -e ${{ matrix.env }}
+        working-directory: firmware
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload ${{ matrix.chip }} firmware
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node tools/upload-firmware/index.js \
+            ".pio/build/${{ matrix.env }}/mimios-base-${{ matrix.chip }}.bin" \
+            "${{ matrix.chip }}" \
+            "${{ steps.version.outputs.value }}"
+        working-directory: firmware
