@@ -177,6 +177,14 @@ static void sendPreferences() {
     out["cartridge"] = loadCartridge();
     out["cartridge_version"] = loadCartridgeVersion();
     out["model"] = ESP.getChipModel();
+    out["cores"] = ESP.getChipCores();
+    out["cpu_freq"] = ESP.getCpuFreqMHz();
+    out["revision"] = ESP.getChipRevision();
+    out["flash_size"] = ESP.getFlashChipSize();
+    out["flash_speed"] = ESP.getFlashChipSpeed();
+    out["free_heap"] = ESP.getFreeHeap();
+    out["mac"] = ESP.getChipMacAddress();
+
 
     String body;
     serializeJson(out, body);
