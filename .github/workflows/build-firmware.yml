@@ -53,7 +53,18 @@ jobs:
         run: pio run -e ${{ matrix.env }} -t buildfs
         working-directory: firmware
 
-      - name: Upload ${{ matrix.chip }} firmware
+      - name: Upload ${{ matrix.chip }} firmware (merged)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node tools/upload-firmware/index.js \
+            ".pio/build/${{ matrix.env }}/firmware-factory.bin" \
+            "${{ matrix.chip }}" \
+            "${{ inputs.version }}"
+        working-directory: firmware
+
+      - name: Upload ${{ matrix.chip }} firmware (no merge)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
