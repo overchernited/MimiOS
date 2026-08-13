@@ -26,8 +26,6 @@
   );
 
   const downloadUrl = $derived(selected ? firmwareDownloadUrl(selected.id) : null);
-  const fsUrl = $derived(selected ? filesystemDownloadUrl(selected.id) : null);
-  const hasFs = $derived(Boolean(selected && selected.fs_size && fsUrl));
 
   async function handleDownload(url: string, name: string) {
     if (downloading) return;
@@ -90,11 +88,6 @@
         <li>
           <span class="text-accent">✓</span> size — <span class="text-fg">{selected ? formatBytes(selected.file_size ?? 0) : '—'}</span>
         </li>
-        {#if selected && selected.fs_size}
-          <li>
-            <span class="text-accent">✓</span> filesystem — <span class="text-fg">{formatBytes(selected.fs_size)}</span>
-          </li>
-        {/if}
         <li><span class="text-accent">✓</span> flash — <span class="text-fg">USB + OTA</span></li>
         <li><span class="text-accent">✓</span> ota — <span class="text-fg">dual partition, auto-rollback</span></li>
       </ul>
@@ -108,15 +101,6 @@
       >
         {downloading ? 'starting download…' : 'download .bin'}
       </button>
-      {#if hasFs && selected}
-        <button
-          class="btn btn-ghost"
-          onclick={() => fsUrl && handleDownload(fsUrl, `${selected.id}-fs.bin`)}
-          disabled={downloading || !fsUrl}
-        >
-          download filesystem image
-        </button>
-      {/if}
       {#if msg}
         <p class="m-0 text-xs text-dim">{msg}</p>
       {/if}
