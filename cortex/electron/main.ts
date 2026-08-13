@@ -22,8 +22,10 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 1280,
     height: 800,
+    minWidth: 1280,
+    minHeight: 780,
     show: false,
-    maximizable: false, // Deshabilita el botón de maximizar/restaurar nativo
+    maximizable: true, // Deshabilita el botón de maximizar/restaurar nativo
     minimizable: false,
     resizable: false,    // Bloquea el redimensionamiento manual por completo
     fullscreenable: false,
