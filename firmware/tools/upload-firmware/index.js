@@ -66,6 +66,7 @@ async function main() {
       title: `MimiOS Base ${chip.toUpperCase()}`,
       description: `MimiOS base firmware for ${chip.toUpperCase()} (ESP32 family)`,
       author: 'MimiOS',
+      file_path: `${id}.bin`,
       version,
       chip,
       file_size: fileSize,
