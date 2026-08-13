@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join, extname } from 'node:path';
-import { handleUpgrade } from './api.js';
+import { handleUpgrade, startHeartbeat } from './api.js';
 
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html',
@@ -68,6 +68,7 @@ export async function startServer(options: StartServerOptions = {}): Promise<Ser
   });
 
   server.on('upgrade', handleUpgrade);
+  startHeartbeat();
 
   let actualPort: number;
   try {

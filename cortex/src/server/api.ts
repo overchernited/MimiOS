@@ -95,24 +95,31 @@ function handleUpgrade(req: IncomingMessage, socket: Duplex, head: Buffer) {
 
 const wss = new WebSocketServer({ noServer: true });
 
-const heartbeatTimer = setInterval(() => {
-  for (const ws of wss.clients as Set<LiveSocket>) {
-    if (ws.readyState !== WebSocket.OPEN) continue;
+let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
 
-    if (ws.isAlive === false) {
-      ws.terminate();
-      continue;
-    }
-    ws.isAlive = false;
-    try {
-      ws.ping();
-    } catch {
-      ws.terminate();
-    }
-  }
-}, HEARTBEAT_INTERVAL);
+export function startHeartbeat() {
+  if (heartbeatTimer) return;
+  heartbeatTimer = setInterval(() => {
+    for (const ws of wss.clients as Set<LiveSocket>) {
+      if (ws.readyState !== WebSocket.OPEN) continue;
 
-wss.on('close', () => clearInterval(heartbeatTimer));
+      if (ws.isAlive === false) {
+        ws.terminate();
+        continue;
+      }
+      ws.isAlive = false;
+      try {
+        ws.ping();
+      } catch {
+        ws.terminate();
+      }
+    }
+  }, HEARTBEAT_INTERVAL);
+
+  wss.on('close', () => {
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+  });
+}
 
 wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
   const live = ws as LiveSocket;
