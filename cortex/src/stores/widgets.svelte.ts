@@ -5,7 +5,7 @@ interface StoredWidget extends WidgetInterface {
     sourceUrl?: string;
 }
 
-const widgetModules = import.meta.glob('/src/apps/**/*.svelte'); 
+const widgetModules = import.meta.glob('/src/widgets/**/*.svelte'); 
 
 export class widgetStore {
     items = $state<StoredWidget[]>([]);
