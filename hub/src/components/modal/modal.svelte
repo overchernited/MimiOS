@@ -26,7 +26,7 @@
     onclose();
   }
 
-  function requestClose() {
+  function playClose() {
     if (closing) return;
     if (!reduced && panelEl && backdropEl) {
       closing = true;
@@ -38,12 +38,17 @@
     }
   }
 
+  function requestClose() {
+    if (closing) return;
+    playClose();
+  }
+
   $effect(() => {
     if (open) {
       closing = false;
       rendered = true;
-    } else if (!closing) {
-      rendered = false;
+    } else if (rendered) {
+      playClose();
     }
   });
 
