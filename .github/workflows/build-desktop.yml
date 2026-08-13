@@ -50,7 +50,7 @@ jobs:
 
       - name: Build ${{ matrix.platform }}
         working-directory: cortex
-        run: pnpm run ${{ matrix.command }}
+        run: pnpm run ${{ matrix.command }} -- --publish ${{ github.ref_type == 'tag' && 'always' || 'never' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
