@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.pio/
+
+# Environment / secrets (never commit real values)
+.env
+.env.*
+!.env.example
+
+# Editors / IDE
+.vscode/
+.idea/
+.vscode-server/
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Local tooling state
+.pnpm-store/
+.venv/
+__pycache__/
+
+# Personal shell / editor / AI tooling config
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.gitmodules
+.mcp.json
+.ripgreprc
+.idea
+.idea/
+.claude/
+.cursor/
+.impeccable/
