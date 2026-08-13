@@ -12,7 +12,7 @@
 const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, '');
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const [binPath, chip, version] = process.argv.slice(2);
+const [binPath, chip, version, type = 'usb'] = process.argv.slice(2);
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !binPath || !chip || !version) {
   console.error(
@@ -70,7 +70,7 @@ async function main() {
       version,
       chip,
       file_size: fileSize,
-      type: 'usb',
+      type: type,
     })
   });
   if (!dbRes.ok) {

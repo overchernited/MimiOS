@@ -61,7 +61,8 @@ jobs:
           node tools/upload-firmware/index.js \
             ".pio/build/${{ matrix.env }}/firmware-factory.bin" \
             "${{ matrix.chip }}" \
-            "${{ inputs.version }}"
+            "${{ inputs.version }}" \
+            "usb"
         working-directory: firmware
 
       - name: Upload ${{ matrix.chip }} firmware (no merge)
@@ -72,5 +73,6 @@ jobs:
           node tools/upload-firmware/index.js \
             ".pio/build/${{ matrix.env }}/firmware.bin" \
             "${{ matrix.chip }}" \
-            "${{ inputs.version }}"
+            "${{ inputs.version }}" \
+            "ota"
         working-directory: firmware
