@@ -1,0 +1,27 @@
+name: Firmware Repo Push
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'firmware/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monorepo Checkout
+        uses: actions/checkout@v4
+
+      - name: Firmware push to MimiOS-Firmware repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GH_PAT }}
+        with:
+          source-directory: 'firmware' 
+
+          destination-github-username: 'overchernited'
+          destination-repository-name: 'MimiOS-Firmware'
+          target-branch: 'main'
+          clean: true
